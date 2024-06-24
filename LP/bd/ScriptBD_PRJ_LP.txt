@@ -1,0 +1,110 @@
+CREATE DATABASE LP;
+USE LP;
+CREATE TABLE usuarios (
+id INT AUTO_INCREMENT PRIMARY KEY,
+email VARCHAR(100) NOT NULL,
+senha VARCHAR(100) NOT NULL,
+nome VARCHAR(100) NOT NULL
+);
+
+-- Tabela Produtos
+CREATE TABLE produtos (
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(100) NOT NULL,
+descricao TEXT,
+preco DECIMAL(10, 3) NOT NULL,
+estoque INT NOT NULL DEFAULT 0
+
+);
+
+-- Tabela Formas de Pagamento
+CREATE TABLE formas_pagamento (
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(100) NOT NULL
+);
+
+-- Tabela Itens de Venda
+CREATE TABLE itens_venda (
+id INT AUTO_INCREMENT PRIMARY KEY,
+id_produto INT NOT NULL,
+quantidade INT NOT NULL,
+preco_unitario DECIMAL(10, 2) NOT NULL,
+FOREIGN KEY (id_produto) REFERENCES produtos(id)
+);
+
+-- Tabela Vendas
+CREATE TABLE vendas (
+id INT AUTO_INCREMENT PRIMARY KEY,
+data_venda TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+id_usuario INT NOT NULL,
+total DECIMAL(10, 3) NOT NULL,
+id_forma_pagamento INT NOT NULL,
+FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
+FOREIGN KEY (id_forma_pagamento) REFERENCES formas_pagamento(id)
+);
+
+-- Tabela Carrinho
+
+CREATE TABLE carrinho (
+    id INT AUTO_INCREMENT PRIMARY KEY
+);
+
+
+
+
+-- Tabela Categorias
+CREATE TABLE categorias (
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(100) NOT NULL
+);
+
+-- Tabela Estoque
+CREATE TABLE estoque (
+id INT AUTO_INCREMENT PRIMARY KEY,
+id_produto INT NOT NULL,
+quantidade INT NOT NULL,
+FOREIGN KEY (id_produto) REFERENCES produtos(id)
+);
+
+CREATE TABLE material (
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE colecao (
+id INT AUTO_INCREMENT PRIMARY KEY,
+nome VARCHAR(100) NOT NULL
+);
+
+ALTER TABLE produtos
+    ADD COLUMN id_material INT,
+    ADD COLUMN id_colecao INT,
+    ADD COLUMN id_categoria INT,
+    ADD FOREIGN KEY (id_material) REFERENCES material(id),
+    ADD FOREIGN KEY (id_colecao) REFERENCES colecao(id),
+    ADD FOREIGN KEY (id_categoria) REFERENCES categorias(id);
+    
+ALTER TABLE carrinho 
+	ADD COLUMN id_produto INT NOT NULL,
+	ADD FOREIGN KEY (id_produto) references produtos(id);
+
+INSERT INTO material (nome) VALUES("Aço Oystersteel"),("Ouro amarelo 18 quilates"),("Ouro Everose 18 quilates");
+INSERT INTO categorias(nome) VALUES("Aço"),("Ouro"),("Diamante");
+INSERT INTO colecao(nome) VALUES("Perpetual");
+INSERT INTO formas_pagamento(nome) VALUES("Cartão de Crédito"),("Pix"),("Boleto");
+
+INSERT INTO produtos (nome, descricao, preco, estoque,id_material,id_colecao,id_categoria) VALUES
+('Oyster Perpetual 41','Mostrador prateado e pulseira Oyster, 41 mm.',48.000,3,1,1,1),
+('Oyster Perpetual 31','Mostrador azul-turquesa, motivo Celebration e pulseira Oyster, 31mm.',42.600,3,1,1,1),
+('Oyster Perpetual 34','Mostrador azul vivo e pulseira Oyster, 34 mm.',43.400,3,1,1,1),
+('Lady-Datejust ','Mostrador chocolate cravejado de diamantes e uma pulseira President., 36mm',587.500,5,3,1,3 ),
+('Day-Date','Mostrador verde ombré e luneta canelada, pulseira President cravejada de diamantes, 36mm.',638.500 ,5,2,1,2 ),
+('Cosmograph Daytona','Mostrador Sundust, cravejado de diamantes e pulseira Oyster, apresenta uma luneta cravejada de diamantes e asas cravejadas de diamantes, 40mm.',942.900 ,3,3,1,2 ),
+('Deepsea','Com disco de luneta Cerachrom em cerâmica azul e pulseira Oyster, 44mm.',398.500  ,6,2,1,2 ),
+('DAY-DATE 36','Mostrador verde ombré e luneta Cravejada de diamantes, pulseira President cravejada de diamantes, 36mm.',751.000  ,6,2,1,2 ),
+('Sky-Dweller ','Mostrador preto vivo e pulseira Jubilee, 42mm.',375.000   ,6,2,1,2 );
+
+
+
+
+
